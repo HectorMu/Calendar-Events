@@ -16,7 +16,7 @@ import {
 } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { Plus, Trash2 } from 'lucide-react'
+import { Pen, Plus, Trash2 } from 'lucide-react'
 
 const days = [0, 1, 2, 3, 4, 5, 6]
 
@@ -43,7 +43,7 @@ const events: CalendarEvent[] = [
     id: 1,
     day: 1,
     startHour: 0,
-    endHour: 1
+    endHour: 3
   },
   {
     id: 2,
@@ -101,9 +101,7 @@ export default function EventsCalendarV2() {
         onOpenChange={() => setSelectedEvent(null)}
       >
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            Editar horario para el {dayLabel[selectedHour?.day ?? 0] ?? ''}
-          </DialogHeader>
+          <DialogHeader>{dayLabel[selectedEvent?.day ?? 0] ?? ''}</DialogHeader>
           <ScheduleForm schedule={selectedEvent} />
           <DialogFooter>
             <Button type="submit">Guardar</Button>
@@ -115,7 +113,7 @@ export default function EventsCalendarV2() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>Agregar horario</DialogHeader>
           <DialogDescription>
-            Configurar horario para el {dayLabel[selectedHour?.day ?? 0] ?? ''}
+            {dayLabel[selectedHour?.day ?? 0] ?? ''}
           </DialogDescription>
           <ScheduleForm schedule={selectedHour} />
           <DialogFooter>
@@ -149,17 +147,25 @@ export default function EventsCalendarV2() {
                   if (item === schedule.startHour) {
                     return (
                       <TableCell
-                        onClick={() => setSelectedEvent(schedule)}
                         rowSpan={schedule.endHour - schedule.startHour + 1}
-                        className="bg-blue-700 text-white text-center rounded-lg relative group"
+                        className="bg-blue-700 text-white  text-start  rounded-lg relative group"
                         key={`${item}-${d}`}
                       >
-                        Evento
+                        <button
+                          onClick={() => setSelectedEvent(schedule)}
+                          className="h-full bg-blue-600/80 opacity-0 group-hover:opacity-100 rounded-lg text-center flex justify-center items-center w-full absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"
+                        >
+                          <Pen className="h-4 w-4" />
+                        </button>
+                        <p className="mb-2">Event</p>
+                        <p>
+                          {' '}
+                          {schedule.startHour} to {schedule.endHour}
+                        </p>
                         <Button
                           variant={'destructive'}
                           size={'xs'}
-                          onClick={(e) => {
-                            e.stopPropagation()
+                          onClick={() => {
                             setSelectedDeleteId(schedule.id)
                           }}
                           className="absolute -top-3 -right-2 text-black opacity-0 group-hover:opacity-100 transition-opacity"
